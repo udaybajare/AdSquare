@@ -1,6 +1,9 @@
 package com.adsquare.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -16,34 +19,25 @@ public class Application {
 		List<Integer> millionList = new ArrayList<>();
 
 		// generate random a million integers
-		IntStream.generate(() -> new Random().nextInt(100) + 100).limit(1000001).forEach((n) -> {
+		int[] randomList = IntStream.generate(() -> new Random().nextInt(100)).limit(1000000).toArray();
+
+		for (int n : randomList) {
 			millionList.add(n);
-		});
+		}
+
+		System.out.println("Max is : " + Collections.max(millionList));
 
 		//Using simple for loop. Total time taken around 30 miliSeconds
 		int secondHighest = new Processor().findSecondSimpleFor(millionList);
 
 		System.out.println("SecondHighest element is : " + secondHighest);
 
-		//Using stream sorted. Total time taken around 450 miliSeconds
-		secondHighest = new Processor().findSecondUsingStream(millionList);
-
-		System.out.println("SecondHighest element using findSecondCollectionsSort is : " + secondHighest);
-
-		//Using Parallel stream sorted. . Total time taken around 300 miliSeconds
-		secondHighest = new Processor().findSecondUsingParallelStream(millionList);
-
-		System.out.println("SecondHighest element using findSecondCollectionsSort is : " + secondHighest);
-
-		//Executing multiple threads. Number of threads created is square root of number of elements and finding 1st
-		// and 2nd from each thread.
+		//Executing multiple threads. Multiple threads are created to find 1st and 2nd from each thread.
 		//Once each thread is executed collecting input in an array and finding 2nd highest.
-		//This is costlier operation. Total time taken is : 348 ms
+		//Total time taken is : 35 ms. This can be further optimized.
 
 		secondHighest = new Application().executeParallel(millionList);
-
-		System.out.println("SecondHighest element using findSecondCollectionsSort is : " + secondHighest);
-
+		System.out.println("SecondHighest element using executeParallel is : " + secondHighest);
 	}
 
 	public int executeParallel(List<Integer> millionList) {
@@ -51,20 +45,20 @@ public class Application {
 		Long startTime = System.currentTimeMillis();
 
 		int n = millionList.size();
-		int k = (int) Math.sqrt(millionList.size());
+
+		//This can be split into multiple subLists for tuning the performance
+		int k = 2;
 
 		List<List<Integer>> listOfSubLists = new ArrayList<>();
 
 		for (int i = 0; i < k; i++) {
 			int start = k * i;
-			int end = k * (i + 1) > n ? n : k * (i + 1);
-
+			int end = k * (i + 1) > n ? n : n / k * (i + 1);
 			listOfSubLists.add(millionList.subList(start, end));
 		}
 
 		List<Integer> firstSecondList = new ArrayList<>();
 
-		//System.out.println("Second is : "+second);
 		ExecutorService executorService = Executors.newFixedThreadPool(k);
 
 		for (int i = 0; i < listOfSubLists.size(); i++) {

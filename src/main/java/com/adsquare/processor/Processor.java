@@ -1,6 +1,5 @@
 package com.adsquare.processor;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class Processor implements Runnable {
@@ -26,18 +25,13 @@ public class Processor implements Runnable {
 			if (number > first) {
 				second = first;
 				first = number;
-			} else if (number > second) {
+			} else if (number > second && number != first) {
 				second = number;
 			}
-
-			//System.out.println("First and Second are : " + first + " : " + second);
 		}
-
-		//findSecondSimpleFor(subList);
 
 		firstSecondList.add(first);
 		firstSecondList.add(second);
-
 	}
 
 	public Integer findSecondSimpleFor(List<Integer> millionList) {
@@ -46,46 +40,18 @@ public class Processor implements Runnable {
 
 		Long start = System.currentTimeMillis();
 
-		//1,3,6,2,5,78,54,1,36
-		for (int number : millionList) {
-			if (number > first) {
+		for (int i = 0; i < millionList.size(); i++) {
+			if (millionList.get(i) > first) {
 				second = first;
-				first = number;
-			} else if (number > second) {
-				second = number;
+				first = millionList.get(i);
+			} else if (millionList.get(i) > second && millionList.get(i) != first) {
+				second = millionList.get(i);
 			}
 		}
 
 		Long end = System.currentTimeMillis();
 
-		//System.out.println("first and second are " + first + " and " + second);
 		System.out.println("Total time taken findSecondSimpleFor : " + (end - start));
-
-		return second;
-	}
-
-	public Integer findSecondUsingStream(List<Integer> millionList) {
-		int first = 0;
-		int second = 0;
-
-		Long start = System.currentTimeMillis();
-		second = millionList.stream().sorted(Comparator.reverseOrder()).limit(2).skip(1).findFirst().get();
-		Long end = System.currentTimeMillis();
-
-		System.out.println("Total time taken findSecondUsingStream : " + (end - start));
-
-		return second;
-	}
-
-	public Integer findSecondUsingParallelStream(List<Integer> millionList) {
-		int first = 0;
-		int second = 0;
-
-		Long start = System.currentTimeMillis();
-		second = millionList.parallelStream().sorted(Comparator.reverseOrder()).limit(2).skip(1).findFirst().get();
-		Long end = System.currentTimeMillis();
-
-		System.out.println("Total time taken findSecondUsingParallelStream : " + (end - start));
 
 		return second;
 	}
