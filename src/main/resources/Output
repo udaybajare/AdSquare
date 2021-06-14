@@ -1,0 +1,9 @@
+Total time taken findSecondSimpleFor : 31
+SecondHighest element is : 199
+Total time taken findSecondUsingStream : 453
+SecondHighest element using findSecondCollectionsSort is : 199
+Total time taken findSecondUsingParallelStream : 281
+SecondHighest element using findSecondCollectionsSort is : 199
+Total time taken findSecondSimpleFor : 16
+Total time taken by executeParallel  : 348
+SecondHighest element using findSecondCollectionsSort is : 199
