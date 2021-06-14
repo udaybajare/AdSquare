@@ -21,12 +21,12 @@ public class Processor implements Runnable {
 		int first = 0;
 		int second = 0;
 
-		for (int number : subList) {
-			if (number > first) {
+		for (int i = 0; i < subList.size(); i++) {
+			if (subList.get(i) > first) {
 				second = first;
-				first = number;
-			} else if (number > second && number != first) {
-				second = number;
+				first = subList.get(i);
+			} else if (subList.get(i) > second && subList.get(i) != first) {
+				second = subList.get(i);
 			}
 		}
 
